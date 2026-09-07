@@ -20,9 +20,18 @@ jobs:
 
     - name: Unzip Source Code
       run: |
-        # सर्व फाईल्स रूट लेव्हलला असल्याने थेट अनझिप करणे
         unzip *.zip -d .
         rm -f *.zip
+
+    - name: Fix Coding Error (Import Calendar)
+      run: |
+        # MonitorService.kt च्या सुरुवातीला missing Calendar लायब्ररी आपोआप जोडणे
+        FILE_PATH="app/src/main/java/com/nightmonitor/app/MonitorService.kt"
+        if [ -f "$FILE_PATH" ]; then
+          echo "Adding missing Calendar import..."
+          # फाईलच्या २ ऱ्या ओळीवर import java.util.Calendar जोडणे
+          sed -i '2i import java.util.Calendar' "$FILE_PATH"
+        fi
 
     - name: Fix and Force Gradle Version
       run: |
