@@ -18,16 +18,21 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Unzip Source Code
+    - name: Unzip and Smart Move Files
       run: |
         unzip NightMonitor-v8-model-ready.zip -d extracted_files
-        # अनझिप झालेल्या फाईल्स मुख्य फोल्डरमध्ये आणणे
-        if [ -d "extracted_files/NightMonitor-v8-model-ready" ]; then
-          mv extracted_files/NightMonitor-v8-model-ready/* . 2>/dev/null || true
-          mv extracted_files/NightMonitor-v8-model-ready/.* . 2>/dev/null || true
+        
+        # gradlew फाईल नेमकी कोणत्या फोल्डरमध्ये आहे ते शोधणे
+        GRADLEW_DIR=$(find extracted_files -name "gradlew" -exec dirname {} \;)
+        
+        if [ -n "$GRADLEW_DIR" ]; then
+          echo "Found gradlew in: $GRADLEW_DIR"
+          # त्या फोल्डरमधील सर्व फाईल्स मुख्य बाहेरच्या डिरेक्टरीमध्ये आणणे
+          mv $GRADLEW_DIR/* . 2>/dev/null || true
+          mv $GRADLEW_DIR/.* . 2>/dev/null || true
         else
-          cp -r extracted_files/* . 2>/dev/null || true
-          cp -r extracted_files/.* . 2>/dev/null || true
+          echo "gradlew not found in zip structure!"
+          exit 1
         fi
         rm -rf extracted_files
         
