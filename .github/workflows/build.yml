@@ -18,16 +18,20 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Unzip Source Code
+    - name: Unzip and Move Source Code
       run: |
+        # १. झिप फाईल अनझिप करणे
         unzip *.zip -d extracted_files
-        cp -r extracted_files/* . 2>/dev/null || true
-        cp -r extracted_files/.* . 2>/dev/null || true
+        
+        # २. nm14 फोल्डरमधून सर्व फाईल्स मुख्य डिरेक्टरीमध्ये आणणे
+        if [ -d "extracted_files/nm14" ]; then
+          mv extracted_files/nm14/* . 2>/dev/null || true
+          mv extracted_files/nm14/.* . 2>/dev/null || true
+        else
+          cp -r extracted_files/* . 2>/dev/null || true
+          cp -r extracted_files/.* . 2>/dev/null || true
+        fi
         rm -rf extracted_files
-
-    - name: Setup Specific Gradle Wrapper
-      run: |
-        gradle wrapper --gradle-version 8.2 --distribution-type all
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
