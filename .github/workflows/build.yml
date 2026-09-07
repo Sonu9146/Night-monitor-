@@ -30,9 +30,18 @@ jobs:
         fi
         rm -rf extracted_files
 
+    - name: Fix Coding Error (Import Calendar)
+      run: |
+        # MonitorService.kt च्या सुरुवातीला Calendar ची लायब्ररी जोडणे
+        FILE_PATH="app/src/main/java/com/nightmonitor/app/MonitorService.kt"
+        if [ -f "$FILE_PATH" ]; then
+          echo "Fixing missing Calendar import..."
+          # दुसऱ्या ओळीवर import java.util.Calendar जोडणे
+          sed -i '2i import java.util.Calendar' "$FILE_PATH"
+        fi
+
     - name: Fix and Force Gradle Version
       run: |
-        # चुकीची अंतर्गत व्हर्जन बदलून थेट स्टेबल ८.२ व्हर्जन सेट करणे
         rm -f gradlew gradlew.bat
         rm -rf gradle/wrapper
         gradle wrapper --gradle-version 8.2 --distribution-type all
