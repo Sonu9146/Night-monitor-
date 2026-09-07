@@ -18,27 +18,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
 
-    - name: Unzip and Move Source Code
+    - name: Unzip Source Code
       run: |
-        unzip *.zip -d extracted_files
-        if [ -d "extracted_files/nm14" ]; then
-          mv extracted_files/nm14/* . 2>/dev/null || true
-          mv extracted_files/nm14/.* . 2>/dev/null || true
-        else
-          cp -r extracted_files/* . 2>/dev/null || true
-          cp -r extracted_files/.* . 2>/dev/null || true
-        fi
-        rm -rf extracted_files
-
-    - name: Fix Coding Error (Import Calendar)
-      run: |
-        # MonitorService.kt च्या सुरुवातीला Calendar ची लायब्ररी जोडणे
-        FILE_PATH="app/src/main/java/com/nightmonitor/app/MonitorService.kt"
-        if [ -f "$FILE_PATH" ]; then
-          echo "Fixing missing Calendar import..."
-          # दुसऱ्या ओळीवर import java.util.Calendar जोडणे
-          sed -i '2i import java.util.Calendar' "$FILE_PATH"
-        fi
+        # सर्व फाईल्स रूट लेव्हलला असल्याने थेट अनझिप करणे
+        unzip *.zip -d .
+        rm -f *.zip
 
     - name: Fix and Force Gradle Version
       run: |
