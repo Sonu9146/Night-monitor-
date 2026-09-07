@@ -25,18 +25,15 @@ jobs:
         cp -r extracted_files/.* . 2>/dev/null || true
         rm -rf extracted_files
 
-    - name: Generate Missing Gradlew
+    - name: Setup Specific Gradle Wrapper
       run: |
-        if [ ! -f "gradlew" ]; then
-          echo "gradlew missing, generating a new one..."
-          gradle wrapper
-        fi
+        gradle wrapper --gradle-version 7.5 --distribution-type all
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: ./gradlew assembleDebug --no-daemon
 
     - name: Upload APK
       uses: actions/upload-artifact@v4
