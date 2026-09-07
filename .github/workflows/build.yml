@@ -20,7 +20,7 @@ jobs:
 
     - name: Unzip Source Code
       run: |
-        unzip NightMonitor-v8-model-ready.zip -d extracted_files
+        unzip *.zip -d extracted_files
         cp -r extracted_files/* . 2>/dev/null || true
         cp -r extracted_files/.* . 2>/dev/null || true
         rm -rf extracted_files
